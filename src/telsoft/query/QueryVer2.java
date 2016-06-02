@@ -14,10 +14,11 @@ import java.util.List;
 public class QueryVer2 {
     public static void main(String[] args) {
         try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader("src/telsoft/data/conver2.txt"));
+            BufferedReader bufferedReader = new BufferedReader(new FileReader("src/telsoft/inputdata/conver2.txt"));
             String s = "";
             while ((s = bufferedReader.readLine()) != null) {
                 String part[] = s.split(",");
+				//Establish a connection and query data
                 Connection connection = OracleConnUtils.getOracleConnection();
                 PreparedStatement preparedStatement1;
                 PreparedStatement preparedStatement2;   // ->use for update
@@ -25,6 +26,7 @@ public class QueryVer2 {
                 String strSQLselect = " SELECT ";
 
                 String updateSQL = " UPDATE " +part[0]+ " SET ";
+				//-> perform select and update
                 for (int i = 1; i< part.length; i++) {
                     strSQLselect+= part[i]+ ", ";
                     if(i == part.length - 1) {
@@ -64,4 +66,3 @@ public class QueryVer2 {
         return Normalizer.normalize(composeUnicode, Normalizer.Form.NFD);
     }
 }
-
