@@ -12,7 +12,7 @@ import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QueryVer2 {
+public class StringBuiderForQuerry {
     public static void main(String[] args) {
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader("src/telsoft/inputdata/conver2.txt"));
@@ -25,23 +25,23 @@ public class QueryVer2 {
                 ResultSet resultSet = null;
                 try {
                     connection = OracleConnUtils.getOracleConnection();
-
-                    String strSQLselect = " SELECT ";
-                    String updateSQL = " UPDATE " + part[0] + " SET ";
+//use StringBuilder less memory than String(best for single thread)
+                    StringBuilder strSQLselect = new StringBuilder("SELECT ");
+                    StringBuilder updateSQL = new StringBuilder("UPDATE " +part[0] + " SET ");
 
                     for (int i = 1; i < part.length; i++) {
-                        strSQLselect += part[i] + ", ";
+                        strSQLselect.append(part[i]+ ", ");
                         if (i == part.length - 1) {
-                            updateSQL += part[i] + " = ?";
+                            updateSQL.append(part[i] + " = ?");
                             break;
                         }
-                        updateSQL += part[i] + " = ?" + ", ";
+                        updateSQL.append( part[i] + " = ?" + ", ");
                     }
-                    strSQLselect += "rowid FROM " + part[0];
-                    updateSQL += " WHERE rowid = ?";
 
-                    preparedStatementSelect = connection.prepareStatement(strSQLselect);
-                    preparedStatementUpdate = connection.prepareStatement(updateSQL);
+                    strSQLselect.append("rowid FROM " + part[0]);
+                    updateSQL.append(" WHERE rowid = ?");
+                    preparedStatementSelect = connection.prepareStatement(String.valueOf(strSQLselect));
+                    preparedStatementUpdate = connection.prepareStatement(String.valueOf(updateSQL));
                     resultSet = preparedStatementSelect.executeQuery();
 
                     while (resultSet.next()) {
