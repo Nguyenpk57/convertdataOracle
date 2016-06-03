@@ -79,21 +79,33 @@ public class QueryVer2 {
         return Normalizer.normalize(composeUnicode, Normalizer.Form.NFD);
     }
 
-    public static void close(Connection connection) throws SQLException {
-        if (connection != null) {
+    public static void close(Connection connection)  {
+        try {
             connection.close();
+        }catch (SQLException e) {
+            e.printStackTrace();
         }
+
     }
 
-    public static void close(ResultSet resultSet) throws SQLException {
-        if (resultSet != null) {
-            resultSet.close();
+    public static void close(ResultSet resultSet)  {
+        try {
+            if (resultSet != null) {
+                resultSet.close();
+            }
+        }catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
     public static void close(PreparedStatement preparedStatement) throws SQLException {
-        if (preparedStatement != null) {
-            preparedStatement.close();
+        try {
+            if (preparedStatement != null) {
+                preparedStatement.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+
     }
 }
