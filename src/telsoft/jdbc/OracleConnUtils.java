@@ -24,5 +24,4 @@ public class OracleConnUtils {
         Connection conn = DriverManager.getConnection(connectionURL, userName, password);
         return conn;
     }
-
-    }
+}

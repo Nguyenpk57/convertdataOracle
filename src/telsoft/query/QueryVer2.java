@@ -20,12 +20,13 @@ public class QueryVer2 {
             while ((line = bufferedReader.readLine()) != null) {
                 String part[] = line.split(",");
                 Connection connection = null;
-                PreparedStatement preparedStatementSelect;
-                PreparedStatement preparedStatementUpdate;
+                PreparedStatement preparedStatementSelect = null;
+                PreparedStatement preparedStatementUpdate = null;
+                ResultSet resultSet = null;
                 try {
                     connection = OracleConnUtils.getOracleConnection();
 
-                    String strSQLselect = " SELECT ";//  dung stringbuilder do ton bo nho hon String vi String luu bo nho trong head
+                    String strSQLselect = " SELECT ";
                     String updateSQL = " UPDATE " + part[0] + " SET ";
 
                     for (int i = 1; i < part.length; i++) {
@@ -41,8 +42,8 @@ public class QueryVer2 {
 
                     preparedStatementSelect = connection.prepareStatement(strSQLselect);
                     preparedStatementUpdate = connection.prepareStatement(updateSQL);
+                    resultSet = preparedStatementSelect.executeQuery();
 
-                    ResultSet resultSet = preparedStatementSelect.executeQuery();
                     while (resultSet.next()) {
                         List<String> value = new ArrayList<String>();
                         String row = resultSet.getString("rowid");
@@ -57,20 +58,42 @@ public class QueryVer2 {
                     preparedStatementUpdate.executeBatch();
 
                     resultSet.close();
-                    preparedStatementUpdate.close();
-                    preparedStatementSelect.close();
-                    connection.close();
-
                 } catch (SQLException e) {
                     e.printStackTrace();
+                } finally {
+                    close(connection);
+                    close(preparedStatementSelect);
+                    close(preparedStatementUpdate);
+                    close(resultSet);
                 }
+
             }
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            System.out.println("No Exception");
         }
     }
 
     public static String convertToComposeUnicode(String composeUnicode) {
         return Normalizer.normalize(composeUnicode, Normalizer.Form.NFD);
+    }
+
+    public static void close(Connection connection) throws SQLException {
+        if (connection != null) {
+            connection.close();
+        }
+    }
+
+    public static void close(ResultSet resultSet) throws SQLException {
+        if (resultSet != null) {
+            resultSet.close();
+        }
+    }
+
+    public static void close(PreparedStatement preparedStatement) throws SQLException {
+        if (preparedStatement != null) {
+            preparedStatement.close();
+        }
     }
 }
