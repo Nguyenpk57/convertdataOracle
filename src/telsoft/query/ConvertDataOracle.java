@@ -23,6 +23,7 @@ public class ConvertDataOracle {
                 PreparedStatement preparedStatementSelect = null;
                 PreparedStatement preparedStatementUpdate = null;
                 ResultSet resultSet = null;
+
                 try {
                     connection = OracleConnUtils.getOracleConnection();
 //Use StringBuilder less memory than String(best for single thread)
